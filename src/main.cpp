@@ -48,6 +48,8 @@ int main(int argc, char** argv)
 	
 	/* Construct VideoCapture object */
 	VideoCapture vidcap;
+
+	/* Choose the camera if the inputFile is empty */
 	bool retVal = (!inputFile.empty()) ? vidcap.open(inputFile) : vidcap.open(0);
 
 	if (!retVal)
@@ -61,6 +63,91 @@ int main(int argc, char** argv)
 	 * Fix the output string to be variable */
 	//VideoWriter video("ellieout.mov", VideoWriter::fourcc('M','J','P','G'), 10, Size(360,640));
 	//VideoWriter video("ellieout2.mov", VideoWriter::fourcc('M','J','P','G'), 10, Size(364,640));
+
+	/* Do different things depending on whether the video is selected or not */
+	if (!parser.get<bool>("video"))
+	{
+		cout << "IMAGE" << endl;
+		Mat image;
+		vidcap.read(image);
+	
+		/* Store height and width of image frame */
+		const int imageH = image.size[0];
+		const int imageW = image.size[1];
+		
+		/* Send through network */
+		Mat nninput = blobFromImage(image, 1.0, Size(W_in, H_in), Scalar(0,0,0), false, false);
+		nnet.setInput(nninput);
+
+		/* Obtain a 4-dim Mat object, an array of heatmaps */	
+		Mat nnoutput = nnet.forward();	
+
+		const int outputH = nnoutput.size[2];
+		const int outputW = nnoutput.size[3];
+
+		/* Find the position of each body part */
+		vector<Point> locations;
+		const int numBodyParts = bodyParts.size();
+		for (int i = 0; i < numBodyParts; ++i)
+		{
+			/* Heatmap slice */
+			Mat heatMap(outputH, outputW, CV_32F, nnoutput.ptr(0,i));
+			
+			/* Find global max value and location */
+			double maxVal;	
+			Point maxLoc;
+			minMaxLoc(heatMap, nullptr, &maxVal, nullptr, &maxLoc);
+			
+			/* Scale to image size */
+			int W = (imageW * maxLoc.x) / outputW;
+			int H = (imageH * maxLoc.y) / outputH;
+
+			/* Add this point or a proxy for None depending on threshold */ //TODO - can we do better?
+			(maxVal > thresh) ? locations.push_back(Point(W,H)) : locations.push_back(Point(-1,-1));
+
+		}
+
+		/* Draw the skeleton lines for each of the posePairs */
+		for (auto& posepr : posePairs)
+		{
+			/* Find body part indices into locations vector */
+			const int idxFrom = bodyParts.at(posepr.first.first);
+			const int idxTo = bodyParts.at(posepr.first.second);
+			
+			/* Only draw for body parts found */
+			if(locations[idxFrom].x > 0 &&
+				locations[idxFrom].y > 0 &&
+				locations[idxTo].x > 0 &&
+				locations[idxTo].y > 0)
+			{
+				String colName = posepr.second;
+				Colour col = colourMap.at(colName);	
+				line(image, locations[idxFrom], locations[idxTo], Scalar(col.B, col.G, col.R), 5);
+				ellipse(image, locations[idxFrom], Size(5,5), 0, 0, 360, Scalar(col.B,col.G,col.R), FILLED);
+				ellipse(image, locations[idxTo], Size(5,5), 0, 0, 360, Scalar(col.B,col.G,col.R), FILLED);
+			}
+		}
+	
+		/* Frame information for image */
+		vector<double> timings;
+		int64 t = nnet.getPerfProfile(timings); 
+		double freq = getTickFrequency() / 1000;
+		string text = to_string(t/freq) + " ms";
+		putText(image, text , Point(10,20), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,0,0));
+
+		imwrite(outputFile, image);
+		cout << "Output written to " << outputFile << endl;
+
+		imshow("Pose Estimation using OpenCV", image);
+
+		/* Will loop to here if an image was passed in instead of a video */
+		waitKey();
+		//cerr << "ERROR: blank frame grabbed" << endl;
+	}
+	else
+	{	
+		cout << "VIDEO" << endl;
+	}
 
 	/* Start grabbing images from video camera */
 	while (waitKey(1) < 0)
