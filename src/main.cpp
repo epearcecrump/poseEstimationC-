@@ -9,16 +9,16 @@ using namespace cv::dnn;
 using namespace std;
 
 /* include set up header files for body parts and pose pairs */
-#include "bodyparts.h"
-#include "posepairs.h"
-#include "colourmap.h"
+#include "headers/bodyparts.h"
+#include "headers/posepairs.h"
+#include "headers/colourmap.h"
 
 int main(int argc, char** argv)
 {
 	/* Parse command line arguments */
 	/* Key: use spaces to separate out parts, not tabs */
 	const String keys =
-		"{path p        |<none>     		| path to input file      }"
+		"{path p        |<none>	     		| path to input file      }"
 		"{pathout o     |./outimages/out.jpg    | output file for video      }"
 		"{threshold t   |0.2        		| threshold value for heatmap }"
 		"{width w       |368        		| preprocess input image width }"
