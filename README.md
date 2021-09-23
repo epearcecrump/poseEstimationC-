@@ -1,4 +1,6 @@
-### Installation of OpenCV and other libraries to compile the code:
+# Pose Estimation in C++ using OpenCV
+
+### 1) Installation of OpenCV and other libraries to compile the code:
 
 1) To install OpenCV using Homebrew on MacOS, open a terminal and paste:
 
@@ -12,7 +14,11 @@
 
 `pkg-config --cflags --libs opencv`
 
-### How to call the program using the command line arguments:
+4) To compile the code, call:
+
+`make`
+
+### 2) How to call the program using the command line arguments:
 
 To obtain help in executing the program, run:
 ```
