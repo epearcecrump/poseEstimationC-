@@ -22,6 +22,8 @@ This repository contains a program written in C++ using the OpenCV library which
 
 `make`
 
+This will create an executable called `main`, which can be run by following the instructions below.
+
 ## 2) How to call the program using the command line arguments:
 
 To view all the possible option flags for executing the program, run either:
