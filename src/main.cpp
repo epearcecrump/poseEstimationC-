@@ -51,18 +51,13 @@ int main(int argc, char** argv)
 
 	/* Choose the camera if the inputFile is empty */
 	bool retVal = (!inputFile.empty()) ? vidcap.open(inputFile) : vidcap.open(0);
-
+	
+	/* Error checking - say if no camera exists */
 	if (!retVal)
 	{
 		cerr << "ERROR: Can't open image/video." << endl;
 		exit(-1);
 	}
-
-	//TEST -- TODO
-	/* TODO - FIX THE DIMENSIONS of the rhs to be the same as the input size video 
-	 * Fix the output string to be variable */
-	//VideoWriter video("ellieout.mov", VideoWriter::fourcc('M','J','P','G'), 10, Size(360,640));
-	//VideoWriter video("ellieout2.mov", VideoWriter::fourcc('M','J','P','G'), 10, Size(364,640));
 
 	/* Do different things depending on whether the video is selected or not */
 	if (!parser.get<bool>("video"))
@@ -140,14 +135,18 @@ int main(int argc, char** argv)
 
 		imshow("Pose Estimation using OpenCV", image);
 
-		/* Will loop to here if an image was passed in instead of a video */
+		/* Wait for the user to exit the program */
 		waitKey();
-		//cerr << "ERROR: blank frame grabbed" << endl;
 	}
 	else
 	{	
 		cout << "VIDEO" << endl;
-		VideoWriter video(outputFile, VideoWriter::fourcc('M','J','P','G'), 10, Size(360,640));
+		/* Use the frame rate from the original video for the output video */	
+		double fps = vidcap.get(CAP_PROP_FPS);
+
+		/* Construct a VideoWriter object in order to write frames to it */
+		VideoWriter video(outputFile, VideoWriter::fourcc('M','J','P','G'), fps, Size(W_in,H_in));
+
 		/* Start grabbing images from video camera */
 		while (waitKey(1) < 0)
 		{
@@ -155,6 +154,8 @@ int main(int argc, char** argv)
 			vidcap.read(image);
 			if (image.empty())
 			{
+				/* Indicate to the user that the writing to the output has been completed */
+				cout << "Output written to " << outputFile << endl;
 				/* Will loop to here if an image was passed in instead of a video */
 				waitKey();
 				//cerr << "ERROR: blank frame grabbed" << endl;
@@ -225,9 +226,9 @@ int main(int argc, char** argv)
 			string text = to_string(t/freq) + " ms";
 			putText(image, text , Point(10,20), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,0,0));
 
-			//TEST - TODO
+			/* Write the image to the video */
 			video.write(image);
-			//imwrite(outputFile, image);
+			/* See the output frames as they're being written */
 			imshow("Pose Estimation using OpenCV", image);
 		}
 
