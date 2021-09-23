@@ -32,8 +32,6 @@ To view all the possible option flags for executing the program, run either:
 or
 `./main --help`
 
-Note, by default, that any output image will be written to `./outimages/out.jpg`.
-
 ### Some examples of calling the program from the command line with inputs:
 
 1) to pass in an input image file named `input.jpg` and output it to a file called `out.jpg`:
@@ -47,6 +45,12 @@ Note, by default, that any output image will be written to `./outimages/out.jpg`
 3) to set a height of 360 pixels and a width of 240 pixels for your input image (say, `input.jpg`):
 
 `./main -p=input.jpg -u=360 -w=240`
+
+4) to pass in a video file named `input.mov` and output it to a file called `output.mov` with a height of 640 pixels and a width of 360 pixels:
+
+`./main -v -p=input.mov -o=output.mov -u=640 -w=360`
+
+Note that the `-v` flag needs to be set for a video to be output.
 
 ## 3) To terminate the program whilst it is running:
 
