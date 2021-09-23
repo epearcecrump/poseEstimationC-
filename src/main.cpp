@@ -19,10 +19,11 @@ int main(int argc, char** argv)
 	/* Important: use spaces to separate out the columns, NOT tabs */
 	const String keys =
 		"{path p        |<none>                 | path to input file      }"
-		"{pathout o     |./outimages/out.jpg    | output file for video      }"
+		"{pathout o     |./outimages/out.jpg    | output file for image/video      }"
 		"{threshold t   |0.2                    | threshold value for heatmap }"
 		"{width w       |368                    | preprocess input image width }"
 		"{height u      |368                    | preprocess input image height }"
+		"{video v       |                       | flag to indicate video }"
 		"{help h        |                       | print this help message }"
 		;
 
