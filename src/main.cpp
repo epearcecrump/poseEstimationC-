@@ -164,7 +164,6 @@ Mat process(Mat& image, Net& nnet, int W_in, int H_in)
 	nnet.setInput(nninput);
 
 	/* Obtain a 4-dim Mat object, an array of heatmaps */	
-	//Mat nnoutput = 
 	return nnet.forward();	
 }
 
