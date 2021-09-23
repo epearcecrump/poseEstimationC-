@@ -18,12 +18,12 @@ int main(int argc, char** argv)
 	/* Parse command line arguments */
 	/* Key: use spaces to separate out parts, not tabs */
 	const String keys =
-		"{path p        |<none>     | path to input file      }"
-		"{pathout o     |out.jpg    | output file for video      }"
-		"{threshold t   |0.2        | threshold value for heatmap }"
-		"{width w       |368        | preprocess input image width }"
-		"{height u      |368        | preprocess input image height }"
-		"{help h        |           | print this help message }"
+		"{path p        |<none>     		| path to input file      }"
+		"{pathout o     |./outimages/out.jpg    | output file for video      }"
+		"{threshold t   |0.2        		| threshold value for heatmap }"
+		"{width w       |368        		| preprocess input image width }"
+		"{height u      |368        		| preprocess input image height }"
+		"{help h        |           		| print this help message }"
 		;
 
 	CommandLineParser parser(argc, argv, keys);
