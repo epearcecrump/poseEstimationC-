@@ -1,5 +1,6 @@
 main
 main.dYSM
+main.dSYM/Contents
 .DS_Store
 epcmov.mov
 outputmov.mov
