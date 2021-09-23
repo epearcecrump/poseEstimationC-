@@ -43,7 +43,7 @@ int main(int argc, char** argv)
 	}
 	
 	/* Read in pre-trained NN" */
-	Net nnet = readNetFromTensorflow("graph_opt.pb");
+	Net nnet = readNetFromTensorflow("./model/graph_opt.pb");
 	
 	/* Construct VideoCapture object */
 	VideoCapture vidcap;
