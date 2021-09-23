@@ -126,26 +126,24 @@ int main(int argc, char** argv)
 				String colName = posepr.second;
 				Colour col = colourMap.at(colName);	
 				line(image, locations[idxFrom], locations[idxTo], Scalar(col.B, col.G, col.R), 5);
-				//ellipse(image, locations[idxFrom], Size(5,5), 0, 0, 360, Scalar(0,0,255), FILLED);
 				ellipse(image, locations[idxFrom], Size(5,5), 0, 0, 360, Scalar(col.B,col.G,col.R), FILLED);
-				//ellipse(image, locations[idxTo], Size(5,5), 0, 0, 360, Scalar(0,0,255), FILLED);
 				ellipse(image, locations[idxTo], Size(5,5), 0, 0, 360, Scalar(col.B,col.G,col.R), FILLED);
 			}
 		}
 	
-	/* Frame information for image */
-	vector<double> timings;
-	int64 t = nnet.getPerfProfile(timings);
-	double freq = getTickFrequency() / 1000;
-	string text = to_string(t/freq) + " ms";
-	putText(image, text , Point(10,20), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,0,0));
+		/* Frame information for image */
+		vector<double> timings;
+		int64 t = nnet.getPerfProfile(timings); 
+		double freq = getTickFrequency() / 1000;
+		string text = to_string(t/freq) + " ms";
+		putText(image, text , Point(10,20), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,0,0));
 
-	//TEST - TODO
-	//video.write(image);
-	//imwrite("epcoutput.jpg", image);
-	imwrite(outputFile, image);
+		//TEST - TODO
+		//video.write(image);
+		//imwrite("epcoutput.jpg", image);
+		imwrite(outputFile, image);
 
-	imshow("Pose Estimation using OpenCV", image);
+		imshow("Pose Estimation using OpenCV", image);
 	}	
 
 	return 0;
